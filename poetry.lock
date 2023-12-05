@@ -167,6 +167,19 @@ files = [
 ]
 
 [[package]]
+name = "config-py"
+version = "0.1.1"
+description = "A Python package for managing configuration files in your apps"
+optional = false
+python-versions = "*"
+files = [
+    {file = "config_py-0.1.1-py3-none-any.whl", hash = "sha256:26be492ea0929b1211a1fa5269c1964f1427ad8ac7b49dea83109a98cd6efc67"},
+]
+
+[package.dependencies]
+click = ">=6.7"
+
+[[package]]
 name = "fastapi"
 version = "0.104.1"
 description = "FastAPI framework, high performance, easy to learn, fast to code, ready for production"
@@ -848,4 +861,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "e9b67aeb223e289a235a3bc4ee21cfb82c90accb59b813cac4369c7574236d4a"
+content-hash = "52376c0251b38390292c6b6f2163ac1b8b713e7b60322f92abda3cc6cbaf4d6e"
