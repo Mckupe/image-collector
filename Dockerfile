@@ -26,6 +26,7 @@ RUN python -m pip install --no-cache-dir poetry==1.4.2 \
     && poetry install --without dev,test --no-interaction --no-ansi \
     && rm -rf $(poetry config cache-dir)/{cache,artifacts}
 
+COPY config.py ./
 COPY __init__.py ./
 
 CMD ["uvicorn", "__init__:app", "--host", "0.0.0.0", "--port", "80"]

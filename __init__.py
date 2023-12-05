@@ -8,13 +8,10 @@ from fastapi import FastAPI, Response
 from fastapi.responses import StreamingResponse
 import requests
 from functools import partial
-import enum
 
-from confg import *
+from config import *
 
 app = FastAPI()
-# file = open('lines.json')
-# lines = json.load(file)
 
 def get_Packs(ip):
     try:
@@ -50,11 +47,9 @@ def f(x,url):
     return((id,img))
 
 @app.get("/get_images/{ip}",response_class=Response)
-async def read_root(ip: str):
-    # if ip not in Backend:
-    #     return "Не найдена данная линия"
-    backIp = Backend[ip].value
-    zmIp = Zm[ip].value
+async def read_root(LineEnum: str):
+    backIp = Backend[LineEnum].value
+    zmIp = Zm[LineEnum].value
     url = f'http://{zmIp}/zm/cgi-bin/nph-zms?mode=single&monitor='
     zip_buffer = io.BytesIO()
     try:
