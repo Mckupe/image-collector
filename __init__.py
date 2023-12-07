@@ -13,7 +13,20 @@ from config import *
 
 app = FastAPI()
 
-def get_Packs(ip):
+async def get_WorkMode(ip):
+    try:
+        response = requests.get(f'http://{ip}/api/v1_0/get_mode')
+    except requests.HTTPError as http_err:
+        print(f'HTTP error occurred: {http_err}')
+        return http_err
+    except Exception as err:
+        print(f'Other error occurred: {err}')
+        return err
+    else:
+        responseJS = json.loads(response.content)
+        return(responseJS)
+
+async def get_Packs(ip):
     try:
         response = requests.get(f'http://{ip}/api/v1_0/packs_queue')
     except requests.HTTPError as http_err:
@@ -24,9 +37,9 @@ def get_Packs(ip):
         return err
     else:
         responseJS = json.loads(response.content)
-        return(len(responseJS))
+        return(responseJS)
 
-def get_Mulps(ip):
+async def get_Mulps(ip):
     try:
         response = requests.get(f'http://{ip}/api/v1_0/multipacks_queue')
     except requests.HTTPError as http_err:
@@ -37,19 +50,33 @@ def get_Mulps(ip):
         return err
     else:
         responseJS = json.loads(response.content)
-        return(len(responseJS))
+        return(responseJS)
+    
+async def get_Cubes(ip):
+    try:
+        response = requests.get(f'http://{ip}/api/v1_0/cubes_queue')
+    except requests.HTTPError as http_err:
+        print(f'HTTP error occurred: {http_err}')
+        return http_err
+    except Exception as err:
+        print(f'Other error occurred: {err}')
+        return err
+    else:
+        responseJS = json.loads(response.content)
+        return(responseJS)
 
 def f(x,url):
     id = x['Monitor']['Id']
-    print(id)
+    name = x['Monitor']['Name']
+    print(name)
     response = requests.get(url + str(id))
     img = io.BytesIO(response.content)
-    return((id,img))
+    return((name,img))
 
 @app.get("/get_images/{ip}",response_class=Response)
-async def read_root(LineEnum: str):
-    backIp = Backend[LineEnum].value
-    zmIp = Zm[LineEnum].value
+async def read_root(LineEnum: Lines):
+    backIp = Backend[LineEnum.value].value
+    zmIp = Zm[LineEnum.value].value
     url = f'http://{zmIp}/zm/cgi-bin/nph-zms?mode=single&monitor='
     zip_buffer = io.BytesIO()
     try:
@@ -71,10 +98,16 @@ async def read_root(LineEnum: str):
         # print(fotos)
         for file_name, file_object in fotos:
             zip_file.writestr(f"{file_name}.jpeg", file_object.getvalue())
-        zip_file.writestr(f"status.txt", str(get_Packs(backIp)) + " / " + str(get_Mulps(backIp)))
+        mode = await get_WorkMode(backIp)
+        packs = await get_Packs(backIp)
+        mults = await get_Mulps(backIp)
+        cubes = await get_Cubes(backIp)
+        data = {'work_mode': mode['work_mode'], "packs": packs, "multipacks" : mults, "cubes": cubes}
+        print(data)
+        zip_file.writestr(f"status.json",  json.dumps(data))
         zip_file.close()
         return StreamingResponse(
             iter([zip_buffer.getvalue()]), 
             media_type="application/x-zip-compressed", 
-            headers = { "Content-Disposition": f"attachment; filename={datetime.datetime.now()}.zip"}
+            headers = { "Content-Disposition": f"attachment; filename={LineEnum}_{datetime.datetime.now()}.zip"}
         )

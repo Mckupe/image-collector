@@ -29,6 +29,6 @@ RUN python -m pip install --no-cache-dir poetry==1.4.2 \
 COPY config.py ./
 COPY __init__.py ./
 
-CMD ["uvicorn", "__init__:app", "--host", "0.0.0.0", "--port", "80"]
+CMD ["uvicorn", "__init__:app", "--host", "0.0.0.0", "--port", "8000"]
 
 # USER get-images

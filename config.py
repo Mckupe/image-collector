@@ -1,7 +1,24 @@
 #  enum_create.py
-import enum
+from enum import Enum
 
-class Backend(enum.Enum):
+class Lines(Enum):
+
+    URGA1 = "URGA1"
+    URGA2 = "URGA2"
+    UCHALY = "UCHALY"
+    REVDA = "REVDA"
+    MINVODI1 = "MINVODI1"
+    MINVODI2 = "MINVODI2"
+    OSIPOVICKI = "OSIPOVICKI"
+    NOVOUL1 = "NOVOUL1"
+    NOVOUL2 = "NOVOUL2"
+    NORDWEST = "NORDWEST"
+    RAZAN1 = "RAZAN1"
+    RAZAN2 = "RAZAN2"
+    RAZAN3 = "RAZAN3"
+
+
+class Backend(Enum):
 
     URGA1 = "10.98.42.112"
     URGA2 = "10.98.42.212"
@@ -17,7 +34,7 @@ class Backend(enum.Enum):
     RAZAN2 = "10.98.62.131"
     RAZAN3 = "10.98.62.71"
 
-class Zm(enum.Enum):
+class Zm(Enum):
 
     URGA1 = "10.98.42.111"
     URGA2 = "10.98.42.211"
